@@ -1,0 +1,6 @@
+{
+  "name": "Contributions Management",
+  "description": "Android-styled application to track and manage monthly, event-based, and special contributions. Features secure privilege tiers, simulated OTP verification, instant WhatsApp receipts, missed payment reports, and progress tracking against targets.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
