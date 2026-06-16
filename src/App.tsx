@@ -1,3 +1,4 @@
+import AdminDashboard from "./pages/AdminDashboard";
 import { registerUser } from './services/api';
 import { createBackup, restoreBackup } from './utils/backup';
 import React, { useState, useEffect } from 'react';
