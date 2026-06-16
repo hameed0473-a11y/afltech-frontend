@@ -915,34 +915,42 @@ export default function App() {
             )}
 
             {/* TAB 6: STAFF */}
-            {activeTab === 'staff' && (
-              <div className="flex flex-col">
-                <StaffManagement
-                  staff={staff}
-                  currentUserRole={loggedInUser.role}
-                  onAddStaff={(newS) => syncStaff([...staff, newS])}
-                  onDeleteStaff={(id) => {
-                    const next = staff.filter(s => s.id !== id);
-                    syncStaff(next);
-                  }}
-                  onPurgeDatabase={() => {
-                    localStorage.setItem('cm_is_purged', 'true');
-                    syncContributors([]);
-                    syncTargets([]);
-                    syncContributions([]);
-                    syncPledges([]);
-                    triggerNotification("Purge Successful 🗑️", "All events, contributors, and histories successfully erased.");
-                  }}
-                  onRestoreDatabase={() => {
-                    localStorage.removeItem('cm_is_purged');
-                    syncContributors(INITIAL_CONTRIBUTORS);
-                    syncTargets(INITIAL_TARGETS);
-                    syncContributions(INITIAL_CONTRIBUTIONS);
-                    syncPledges(INITIAL_PLEDGES);
-                    triggerNotification("Database Restored 🔄", "Initial demo events, contributors, and histories successfully restored.");
-                  }}
-                />
+{activeTab === 'staff' && (
+  <div className="flex flex-col">
 
+    <AdminDashboard />
+
+    <StaffManagement
+      staff={staff}
+      currentUserRole={loggedInUser.role}
+      onAddStaff={(newS) => syncStaff([...staff, newS])}
+      onDeleteStaff={(id) => {
+        const next = staff.filter(s => s.id !== id);
+        syncStaff(next);
+      }}
+      onPurgeDatabase={() => {
+        localStorage.setItem('cm_is_purged', 'true');
+        syncContributors([]);
+        syncTargets([]);
+        syncContributions([]);
+        syncPledges([]);
+        triggerNotification(
+          "Purge Successful 🗑️",
+          "All events, contributors, and histories successfully erased."
+        );
+      }}
+      onRestoreDatabase={() => {
+        localStorage.removeItem('cm_is_purged');
+        syncContributors(INITIAL_CONTRIBUTORS);
+        syncTargets(INITIAL_TARGETS);
+        syncContributions(INITIAL_CONTRIBUTIONS);
+        syncPledges(INITIAL_PLEDGES);
+        triggerNotification(
+          "Database Restored 🔄",
+          "Initial demo events restored."
+        );
+      }}
+    />
                 {/* Backup and Restore Section */}
                 <div className="px-4 py-3 space-y-2">
                   <h4 className="text-xs font-bold text-slate-600 uppercase tracking-wider">
