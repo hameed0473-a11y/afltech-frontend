@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function formatDate(str: string | null) {
   if (!str) return "—";
@@ -14,40 +14,92 @@ function initials(name: string) {
   return name.trim().split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
 }
 
-const ADMIN_USERNAME = "hameed";
-const ADMIN_PASSWORD = "Asifa96@";
+const API_BASE = "https://api.aftechs.in/api/auth";
+const TOKEN_KEY = "aftech_admin_token";
 
 function AdminDashboard() {
-  const [authed, setAuthed] = useState(false);
-  const [username, setUsername] = useState("");
+  const [authed, setAuthed] = useState(() => !!sessionStorage.getItem(TOKEN_KEY));
+  const [username, setUsername] = useState(() => sessionStorage.getItem(TOKEN_KEY + "_user") || "");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [fetchError, setFetchError] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (authed) loadUsers();
+  }, []);
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+    setError("");
+    setIsLoggingIn(true);
+
+    try {
+      // Render free-tier services spin down when idle, so the first
+      // request can take 30-60s while the server wakes back up.
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 60000);
+
+      const res = await fetch(`${API_BASE}/admin-login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+        signal: controller.signal
+      });
+      clearTimeout(timeout);
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        setError(result.error || "Invalid username or password.");
+        setIsLoggingIn(false);
+        return;
+      }
+
+      sessionStorage.setItem(TOKEN_KEY, result.token);
+      sessionStorage.setItem(TOKEN_KEY + "_user", username);
       setAuthed(true);
-      setError("");
+      setPassword("");
+      setIsLoggingIn(false);
       loadUsers();
-    } else {
-      setError("Invalid username or password.");
+    } catch (err) {
+      setError("Could not reach the server. It may be waking up — please try again in a moment.");
+      setIsLoggingIn(false);
     }
   };
 
   const loadUsers = () => {
+    const token = sessionStorage.getItem(TOKEN_KEY);
+    if (!token) {
+      setAuthed(false);
+      return;
+    }
+
     setLoading(true);
     setFetchError(false);
-    fetch("https://api.aftechs.in/api/auth/users")
-      .then((r) => r.json())
+    fetch(`${API_BASE}/users`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then((r) => {
+        if (r.status === 401 || r.status === 403) {
+          // Token missing/expired/invalid — force re-login
+          sessionStorage.removeItem(TOKEN_KEY);
+          sessionStorage.removeItem(TOKEN_KEY + "_user");
+          setAuthed(false);
+          throw new Error("Session expired");
+        }
+        return r.json();
+      })
       .then((data) => { setUsers(Array.isArray(data) ? data : []); setLoading(false); })
       .catch(() => { setFetchError(true); setLoading(false); });
   };
 
   const handleLogout = () => {
+    sessionStorage.removeItem(TOKEN_KEY);
+    sessionStorage.removeItem(TOKEN_KEY + "_user");
     setAuthed(false);
     setUsername("");
     setPassword("");
@@ -120,9 +172,10 @@ function AdminDashboard() {
 
             <button
               type="submit"
-              style={{ width: "100%", background: "#0F6E56", color: "#fff", border: "none", borderRadius: 8, padding: "11px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}
+              disabled={isLoggingIn}
+              style={{ width: "100%", background: isLoggingIn ? "#94a3b8" : "#0F6E56", color: "#fff", border: "none", borderRadius: 8, padding: "11px", fontSize: 14, fontWeight: 600, cursor: isLoggingIn ? "default" : "pointer" }}
             >
-              Login to Dashboard
+              {isLoggingIn ? "Logging in… (may take up to a minute)" : "Login to Dashboard"}
             </button>
           </form>
 
@@ -148,7 +201,7 @@ function AdminDashboard() {
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ fontSize: 13, color: "#64748b" }}>👤 <strong>hameed</strong></div>
+          <div style={{ fontSize: 13, color: "#64748b" }}>👤 <strong>{username || "Admin"}</strong></div>
           <button
             onClick={handleLogout}
             style={{ fontSize: 12, color: "#991B1B", background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 8, padding: "6px 14px", cursor: "pointer", fontWeight: 600 }}
