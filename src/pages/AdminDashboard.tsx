@@ -56,6 +56,7 @@ function AdminDashboard() {
 
   const paid = users.filter((u) => u.is_paid).length;
   const free = users.length - paid;
+  const interested = users.filter((u) => u.interested_in_pro && !u.is_paid).length;
 
   // ── LOGIN SCREEN ──
   if (!authed) {
@@ -158,13 +159,14 @@ function AdminDashboard() {
       </div>
 
       {/* Stats */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: "1.5rem" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12, marginBottom: "1.5rem" }}>
         {[
           { label: "Total users", value: users.length, color: "#0F6E56" },
           { label: "Paid users", value: paid, color: "#1e293b" },
           { label: "Free users", value: free, color: "#1e293b" },
+          { label: "Interested in Pro", value: interested, color: "#854F0B", highlight: true },
         ].map((s) => (
-          <div key={s.label} style={{ background: "#f1f5f9", borderRadius: 10, padding: "1rem" }}>
+          <div key={s.label} style={{ background: s.highlight ? "#FAEEDA" : "#f1f5f9", borderRadius: 10, padding: "1rem" }}>
             <div style={{ fontSize: 12, color: "#64748b", marginBottom: 6 }}>{s.label}</div>
             <div style={{ fontSize: 26, fontWeight: 600, color: s.color }}>{loading ? "—" : s.value}</div>
           </div>
@@ -194,7 +196,7 @@ function AdminDashboard() {
             <table style={{ width: "100%", borderCollapse: "collapse" }}>
               <thead>
                 <tr style={{ background: "#f8fafc" }}>
-                  {["Name", "Mobile", "Email", "Registered", "Logins", "Plan"].map((h) => (
+                  {["Name", "Mobile", "Email", "Registered", "Logins", "Plan", "Interested"].map((h) => (
                     <th key={h} style={{ fontSize: 11, fontWeight: 600, color: "#94a3b8", textAlign: "left", padding: "10px 1.25rem", borderBottom: "1px solid #e2e8f0", textTransform: "uppercase", letterSpacing: "0.04em", whiteSpace: "nowrap" }}>{h}</th>
                   ))}
                 </tr>
@@ -218,6 +220,15 @@ function AdminDashboard() {
                       <span style={{ fontSize: 11, padding: "3px 10px", borderRadius: 99, background: u.is_paid ? "#E1F5EE" : "#FAECE7", color: u.is_paid ? "#0F6E56" : "#993C1D", fontWeight: 600 }}>
                         {u.is_paid ? "Paid" : "Free"}
                       </span>
+                    </td>
+                    <td style={{ padding: "12px 1.25rem", textAlign: "center" }}>
+                      {u.interested_in_pro ? (
+                        <span style={{ fontSize: 11, padding: "3px 10px", borderRadius: 99, background: "#FAEEDA", color: "#854F0B", fontWeight: 600 }}>
+                          🔥 Yes
+                        </span>
+                      ) : (
+                        <span style={{ fontSize: 12, color: "#cbd5e1" }}>—</span>
+                      )}
                     </td>
                   </tr>
                 ))}
