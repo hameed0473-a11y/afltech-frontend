@@ -1,4 +1,15 @@
+import { useEffect, useState } from 'react';
+
 export default function LandingPage() {
+  const [visitorCount, setVisitorCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch('https://api.aftechs.in/api/auth/visitor', { method: 'POST' })
+      .then(r => r.json())
+      .then(d => { if (d.count) setVisitorCount(d.count); })
+      .catch(() => {});
+  }, []);
+
   return (
     <>
       <style>{`
@@ -107,10 +118,14 @@ export default function LandingPage() {
         <div className="section-tag">Who we are</div>
         <h2 className="section">About AFTech</h2>
         <p className="section-sub sans">AFTech Software Limited is an independent mobile app development studio based in Andhra Pradesh, India. We build practical, affordable technology solutions for real people.</p>
-        <div className="stats-row">
+        <div className="stats-row" style={{gridTemplateColumns:'repeat(4,1fr)'}}>
           <div className="stat-item"><div className="stat-num">3</div><div className="stat-lbl">Apps in pipeline</div></div>
           <div className="stat-item"><div className="stat-num">1</div><div className="stat-lbl">Live app</div></div>
           <div className="stat-item"><div className="stat-num">100%</div><div className="stat-lbl">Made in India</div></div>
+          <div className="stat-item">
+            <div className="stat-num">{visitorCount !== null ? visitorCount.toLocaleString() : '—'}</div>
+            <div className="stat-lbl">Site Visitors</div>
+          </div>
         </div>
         <div className="values-grid">
           {[
