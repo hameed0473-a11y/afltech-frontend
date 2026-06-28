@@ -1,4 +1,16 @@
+import { useEffect, useState } from 'react';
+
 export default function LandingPage() {
+  const [visitorCount, setVisitorCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    // Ping backend to increment and fetch visitor count
+    fetch('https://api.aftechs.in/api/auth/visitor', { method: 'POST' })
+      .then(r => r.json())
+      .then(d => { if (d.count) setVisitorCount(d.count); })
+      .catch(() => {}); // silent fail — never blocks the page
+  }, []);
+
   return (
     <>
       <style>{`
@@ -95,7 +107,7 @@ export default function LandingPage() {
       <div className="hero">
         <div className="hero-tag">AFTech Software Limited</div>
         <h1>Building apps that <em>simplify</em> everyday life</h1>
-        <p className="sans">We design and develop user-friendly mobile applications for individuals, communities, and organisations across India.</p>
+        <p className="sans">We design and develop user-friendly mobile applications for individuals, communities, and organisations across the globe.</p>
         <div className="hero-btns">
           <a href="#apps"><button className="btn-primary">Explore our apps</button></a>
           <a href="#about"><button className="btn-outline">About AFTech</button></a>
@@ -106,11 +118,15 @@ export default function LandingPage() {
       <div className="section" id="about">
         <div className="section-tag">Who we are</div>
         <h2 className="section">About AFTech</h2>
-        <p className="section-sub sans">AFTech Software Limited is an independent mobile app development studio based in Andhra Pradesh, India. We build practical, affordable technology solutions for real people.</p>
-        <div className="stats-row">
+        <p className="section-sub sans">AFTech Software Limited is an independent mobile app development studio based in Andhra Pradesh, India. We build practical, affordable, and <strong>budget-friendly</strong> technology solutions for real people — without compromising on quality. For enquiries: <a href="mailto:admin@aftechs.in" style={{color:'#0F6E56',fontWeight:600}}>admin@aftechs.in</a></p>
+        <div className="stats-row" style={{gridTemplateColumns:'repeat(4,1fr)'}}>
           <div className="stat-item"><div className="stat-num">3</div><div className="stat-lbl">Apps in pipeline</div></div>
           <div className="stat-item"><div className="stat-num">1</div><div className="stat-lbl">Live app</div></div>
           <div className="stat-item"><div className="stat-num">100%</div><div className="stat-lbl">Made in India</div></div>
+          <div className="stat-item">
+            <div className="stat-num">{visitorCount !== null ? visitorCount.toLocaleString() : '—'}</div>
+            <div className="stat-lbl">Site Visitors</div>
+          </div>
         </div>
         <div className="values-grid">
           {[
@@ -125,6 +141,29 @@ export default function LandingPage() {
               <div className="value-desc">{v.desc}</div>
             </div>
           ))}
+        </div>
+
+        {/* CUSTOMER FIRST APPROACH */}
+        <div style={{marginTop:'2.5rem',background:'#f4faf7',border:'1px solid #c8e8dc',borderRadius:14,padding:'1.75rem 2rem'}}>
+          <div className="section-tag" style={{marginBottom:'0.5rem'}}>Our Promise</div>
+          <h3 style={{fontFamily:'sans-serif',fontSize:'1.1rem',fontWeight:700,color:'#085041',marginBottom:'1rem'}}>Customer First Approach</h3>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:12}}>
+            {[
+              { step: '01', icon: '📋', title: 'Share Your Requirement', desc: 'Tell us what you need. We listen first, then plan.' },
+              { step: '02', icon: '💳', title: 'Pay Only 25% Upfront', desc: 'A small commitment to get the project started — nothing more.' },
+              { step: '03', icon: '✅', title: 'Pay the Rest After Satisfaction', desc: 'Remaining payment only after you are fully satisfied with the result.' },
+            ].map(item => (
+              <div key={item.step} style={{background:'#fff',border:'1px solid #c8e8dc',borderRadius:10,padding:'1rem',fontFamily:'sans-serif'}}>
+                <div style={{fontSize:22,marginBottom:8}}>{item.icon}</div>
+                <div style={{fontSize:10,fontWeight:700,color:'#0F6E56',letterSpacing:2,textTransform:'uppercase',marginBottom:4}}>Step {item.step}</div>
+                <div style={{fontSize:13,fontWeight:600,color:'#1a1a1a',marginBottom:6}}>{item.title}</div>
+                <div style={{fontSize:12,color:'#666',lineHeight:1.6}}>{item.desc}</div>
+              </div>
+            ))}
+          </div>
+          <p style={{fontFamily:'sans-serif',fontSize:12,color:'#0F6E56',marginTop:'1rem',fontWeight:600}}>
+            Ready to get started? → <a href="mailto:admin@aftechs.in" style={{color:'#0F6E56'}}>admin@aftechs.in</a>
+          </p>
         </div>
       </div>
 
