@@ -1,23 +1,11 @@
-import { useEffect, useState } from 'react';
-
 export default function LandingPage() {
-  const [visitorCount, setVisitorCount] = useState<number | null>(null);
-
-  useEffect(() => {
-    // Ping backend to increment and fetch visitor count
-    fetch('https://api.aftechs.in/api/auth/visitor', { method: 'POST' })
-      .then(r => r.json())
-      .then(d => { if (d.count) setVisitorCount(d.count); })
-      .catch(() => {}); // silent fail — never blocks the page
-  }, []);
-
   return (
     <>
       <style>{`
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: Georgia, 'Times New Roman', serif; color: #1a1a1a; background: #fff; }
+        body { font-family: Georgia, 'Times New Roman', serif; color: #1a1a1a; background: #F0F4F2; }
         .sans { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-        nav { background: #0F6E56; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; position: sticky; top: 0; z-index: 100; }
+        nav { background: #0A5C47; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.18); }
         .nav-logo { display: flex; align-items: center; gap: 10px; }
         .nav-logo-icon { width: 34px; height: 34px; background: #fff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: sans-serif; font-weight: 700; font-size: 12px; color: #0F6E56; }
         .nav-brand { color: #fff; font-family: sans-serif; font-weight: 600; font-size: 15px; }
@@ -27,43 +15,43 @@ export default function LandingPage() {
         .nav-link:hover { background: rgba(255,255,255,0.12); color: #fff; }
         .nav-admin { background: #EF9F27; color: #412402; font-family: sans-serif; font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 6px; cursor: pointer; border: none; text-decoration: none; }
         .nav-admin:hover { background: #FAC775; }
-        .hero { background: #0F6E56; padding: 5rem 2rem 4rem; text-align: center; }
+        .hero { background: linear-gradient(135deg, #0A5C47 0%, #0F6E56 60%, #12805F 100%); padding: 5rem 2rem 4rem; text-align: center; }
         .hero-tag { display: inline-block; background: rgba(255,255,255,0.15); color: #E1F5EE; font-family: sans-serif; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 5px 14px; border-radius: 99px; margin-bottom: 1.5rem; }
         .hero h1 { color: #fff; font-size: 2.4rem; font-weight: 700; line-height: 1.25; margin-bottom: 1rem; max-width: 560px; margin-left: auto; margin-right: auto; }
         .hero h1 em { color: #EF9F27; font-style: normal; }
-        .hero p { color: rgba(255,255,255,0.8); font-family: sans-serif; font-size: 15px; line-height: 1.7; max-width: 480px; margin: 0 auto 2rem; }
+        .hero p { color: rgba(255,255,255,0.85); font-family: sans-serif; font-size: 15px; line-height: 1.7; max-width: 480px; margin: 0 auto 2rem; }
         .hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-        .btn-primary { background: #EF9F27; color: #412402; font-family: sans-serif; font-weight: 600; font-size: 14px; padding: 10px 24px; border-radius: 8px; border: none; cursor: pointer; }
+        .btn-primary { background: #EF9F27; color: #412402; font-family: sans-serif; font-weight: 600; font-size: 14px; padding: 10px 24px; border-radius: 8px; border: none; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
         .btn-outline { background: transparent; color: #fff; font-family: sans-serif; font-weight: 500; font-size: 14px; padding: 10px 24px; border-radius: 8px; border: 1.5px solid rgba(255,255,255,0.5); cursor: pointer; }
-        .section { padding: 4rem 2rem; }
+        .section { padding: 4rem 2rem; background: #F0F4F2; }
         .section-tag { font-family: sans-serif; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #0F6E56; font-weight: 600; margin-bottom: 0.5rem; }
         .section h2 { font-size: 1.9rem; color: #1a1a1a; margin-bottom: 0.75rem; font-weight: 700; }
-        .section-sub { font-family: sans-serif; font-size: 15px; color: #555; line-height: 1.7; max-width: 500px; margin-bottom: 2.5rem; }
-        .stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: #e8e8e8; border: 1px solid #e8e8e8; border-radius: 12px; overflow: hidden; margin-bottom: 3rem; }
-        .stat-item { background: #fff; padding: 1.5rem; text-align: center; }
+        .section-sub { font-family: sans-serif; font-size: 15px; color: #444; line-height: 1.7; max-width: 500px; margin-bottom: 2.5rem; }
+        .stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: #d4e4dc; border: 1px solid #d4e4dc; border-radius: 12px; overflow: hidden; margin-bottom: 3rem; box-shadow: 0 2px 10px rgba(15,110,86,0.08); }
+        .stat-item { background: #ffffff; padding: 1.5rem; text-align: center; }
         .stat-num { font-size: 2rem; font-weight: 700; color: #0F6E56; font-family: sans-serif; }
-        .stat-lbl { font-family: sans-serif; font-size: 12px; color: #888; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-lbl { font-family: sans-serif; font-size: 12px; color: #777; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
         .values-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 16px; }
-        .value-card { padding: 1.5rem; border: 1px solid #e8e8e8; border-radius: 12px; }
-        .value-icon { width: 36px; height: 36px; background: #E1F5EE; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+        .value-card { padding: 1.5rem; border: 1px solid #d4e4dc; border-radius: 12px; background: #ffffff; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+        .value-icon { width: 36px; height: 36px; background: #D6EEE6; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
         .value-title { font-family: sans-serif; font-size: 14px; font-weight: 600; color: #1a1a1a; margin-bottom: 6px; }
-        .value-desc { font-family: sans-serif; font-size: 12px; color: #666; line-height: 1.6; }
+        .value-desc { font-family: sans-serif; font-size: 12px; color: #555; line-height: 1.6; }
         .apps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 16px; }
-        .app-card { border: 1px solid #e8e8e8; border-radius: 14px; overflow: hidden; cursor: pointer; transition: border-color 0.2s; }
-        .app-card:hover { border-color: #0F6E56; }
-        .app-card-top { padding: 1.5rem 1.25rem 1rem; background: #f9fafb; }
+        .app-card { border: 1px solid #d4e4dc; border-radius: 14px; overflow: hidden; cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; background: #ffffff; box-shadow: 0 1px 5px rgba(0,0,0,0.06); }
+        .app-card:hover { border-color: #0F6E56; box-shadow: 0 4px 16px rgba(15,110,86,0.12); }
+        .app-card-top { padding: 1.5rem 1.25rem 1rem; background: #F7FAF8; }
         .app-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; font-size: 22px; }
         .app-icon.green { background: #0F6E56; }
         .app-icon.blue { background: #185FA5; }
         .app-icon.amber { background: #854F0B; }
         .app-name { font-family: sans-serif; font-size: 15px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
         .app-status { font-family: sans-serif; font-size: 11px; padding: 2px 8px; border-radius: 99px; display: inline-block; }
-        .status-live { background: #E1F5EE; color: #085041; }
+        .status-live { background: #D6EEE6; color: #085041; }
         .status-dev { background: #FAEEDA; color: #633806; }
-        .app-card-body { padding: 1rem 1.25rem; }
+        .app-card-body { padding: 1rem 1.25rem; background: #ffffff; }
         .app-desc { font-family: sans-serif; font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 1rem; }
         .app-link { font-family: sans-serif; font-size: 12px; color: #0F6E56; font-weight: 600; }
-        .app-detail { background: #f4faf7; border: 1px solid #c8e8dc; border-radius: 14px; padding: 2rem; margin-top: 1.5rem; display: none; }
+        .app-detail { background: #EAF4EF; border: 1px solid #b8dccb; border-radius: 14px; padding: 2rem; margin-top: 1.5rem; display: none; box-shadow: 0 2px 10px rgba(15,110,86,0.07); }
         .app-detail.open { display: block; }
         .app-detail h3 { font-size: 1.2rem; font-weight: 700; color: #085041; margin-bottom: 0.5rem; }
         .app-detail p { font-family: sans-serif; font-size: 14px; color: #085041; line-height: 1.7; margin-bottom: 1rem; }
@@ -71,17 +59,17 @@ export default function LandingPage() {
         .feature-item { background: #fff; border: 1px solid #c8e8dc; border-radius: 10px; padding: 12px; font-family: sans-serif; font-size: 12px; color: #1a1a1a; line-height: 1.4; display: flex; gap: 8px; align-items: flex-start; }
         .fi-blue { border-color: #B5D4F4; }
         .fi-amber { border-color: #FAC775; }
-        .contact-section { background: #0F6E56; padding: 3.5rem 2rem; text-align: center; }
+        .contact-section { background: linear-gradient(135deg, #0A5C47 0%, #0F6E56 100%); padding: 3.5rem 2rem; text-align: center; }
         .contact-section h2 { color: #fff; font-size: 1.7rem; margin-bottom: 0.75rem; }
-        .contact-section p { color: rgba(255,255,255,0.8); font-family: sans-serif; font-size: 14px; margin-bottom: 1.5rem; }
+        .contact-section p { color: rgba(255,255,255,0.85); font-family: sans-serif; font-size: 14px; margin-bottom: 1.5rem; }
         .contact-email { color: #EF9F27; font-family: sans-serif; font-size: 15px; font-weight: 600; text-decoration: none; }
-        footer { background: #085041; padding: 1.5rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+        footer { background: #073D2E; padding: 1.5rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
         .footer-txt { color: rgba(255,255,255,0.7); font-family: sans-serif; font-size: 12px; }
         .footer-txt strong { color: #fff; }
         .footer-links { display: flex; gap: 16px; }
         .footer-a { color: rgba(255,255,255,0.6); font-family: sans-serif; font-size: 12px; text-decoration: none; }
         .footer-a:hover { color: #EF9F27; }
-        .divider { height: 1px; background: #e8e8e8; margin: 0 2rem; }
+        .divider { height: 1px; background: #d4e4dc; margin: 0 2rem; }
         @media (max-width: 600px) {
           .hero h1 { font-size: 1.7rem; }
           .nav-links { gap: 2px; }
@@ -107,7 +95,7 @@ export default function LandingPage() {
       <div className="hero">
         <div className="hero-tag">AFTech Software Limited</div>
         <h1>Building apps that <em>simplify</em> everyday life</h1>
-        <p className="sans">We design and develop user-friendly mobile applications for individuals, communities, and organisations across the globe.</p>
+        <p className="sans">We design and develop user-friendly mobile applications for individuals, communities, and organisations across India.</p>
         <div className="hero-btns">
           <a href="#apps"><button className="btn-primary">Explore our apps</button></a>
           <a href="#about"><button className="btn-outline">About AFTech</button></a>
@@ -118,15 +106,11 @@ export default function LandingPage() {
       <div className="section" id="about">
         <div className="section-tag">Who we are</div>
         <h2 className="section">About AFTech</h2>
-        <p className="section-sub sans">AFTech Software Limited is an independent mobile app development studio based in Andhra Pradesh, India. We build practical, affordable, and <strong>budget-friendly</strong> technology solutions for real people — without compromising on quality. For enquiries: <a href="mailto:admin@aftechs.in" style={{color:'#0F6E56',fontWeight:600}}>admin@aftechs.in</a></p>
-        <div className="stats-row" style={{gridTemplateColumns:'repeat(4,1fr)'}}>
+        <p className="section-sub sans">AFTech Software Limited is an independent mobile app development studio based in Andhra Pradesh, India. We build practical, affordable technology solutions for real people.</p>
+        <div className="stats-row">
           <div className="stat-item"><div className="stat-num">3</div><div className="stat-lbl">Apps in pipeline</div></div>
           <div className="stat-item"><div className="stat-num">1</div><div className="stat-lbl">Live app</div></div>
           <div className="stat-item"><div className="stat-num">100%</div><div className="stat-lbl">Made in India</div></div>
-          <div className="stat-item">
-            <div className="stat-num">{visitorCount !== null ? visitorCount.toLocaleString() : '—'}</div>
-            <div className="stat-lbl">Site Visitors</div>
-          </div>
         </div>
         <div className="values-grid">
           {[
@@ -141,29 +125,6 @@ export default function LandingPage() {
               <div className="value-desc">{v.desc}</div>
             </div>
           ))}
-        </div>
-
-        {/* CUSTOMER FIRST APPROACH */}
-        <div style={{marginTop:'2.5rem',background:'#f4faf7',border:'1px solid #c8e8dc',borderRadius:14,padding:'1.75rem 2rem'}}>
-          <div className="section-tag" style={{marginBottom:'0.5rem'}}>Our Promise</div>
-          <h3 style={{fontFamily:'sans-serif',fontSize:'1.1rem',fontWeight:700,color:'#085041',marginBottom:'1rem'}}>Customer First Approach</h3>
-          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:12}}>
-            {[
-              { step: '01', icon: '📋', title: 'Share Your Requirement', desc: 'Tell us what you need. We listen first, then plan.' },
-              { step: '02', icon: '💳', title: 'Pay Only 25% Upfront', desc: 'A small commitment to get the project started — nothing more.' },
-              { step: '03', icon: '✅', title: 'Pay the Rest After Satisfaction', desc: 'Remaining payment only after you are fully satisfied with the result.' },
-            ].map(item => (
-              <div key={item.step} style={{background:'#fff',border:'1px solid #c8e8dc',borderRadius:10,padding:'1rem',fontFamily:'sans-serif'}}>
-                <div style={{fontSize:22,marginBottom:8}}>{item.icon}</div>
-                <div style={{fontSize:10,fontWeight:700,color:'#0F6E56',letterSpacing:2,textTransform:'uppercase',marginBottom:4}}>Step {item.step}</div>
-                <div style={{fontSize:13,fontWeight:600,color:'#1a1a1a',marginBottom:6}}>{item.title}</div>
-                <div style={{fontSize:12,color:'#666',lineHeight:1.6}}>{item.desc}</div>
-              </div>
-            ))}
-          </div>
-          <p style={{fontFamily:'sans-serif',fontSize:12,color:'#0F6E56',marginTop:'1rem',fontWeight:600}}>
-            Ready to get started? → <a href="mailto:admin@aftechs.in" style={{color:'#0F6E56'}}>admin@aftechs.in</a>
-          </p>
         </div>
       </div>
 
